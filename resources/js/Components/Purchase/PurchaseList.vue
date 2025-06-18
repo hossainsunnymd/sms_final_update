@@ -46,7 +46,7 @@ const form=useForm({
 
 const showModal = () => {
     modal.value = true;
-    
+
 }
 function submitForm() {
     form.get('/list-purchase');
@@ -110,9 +110,22 @@ function submitForm() {
                 </EasyDataTable>
             </div>
         </div>
-        <div class="flex gap-2 justify-end mt-4">
-            <Link v-if="page.props.purchases.prev_page_url" :href="page.props.purchases.prev_page_url">Prev</Link>
-            <Link v-if="page.props.purchases.next_page_url" :href="page.props.purchases.next_page_url" >Next</Link>
+           <!-- Pagination Buttons -->
+        <div class="flex justify-center gap-4 mt-6">
+            <Link
+                v-if="page.props.purchases.prev_page_url"
+                :href="page.props.purchases.prev_page_url"
+                class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition duration-300"
+            >
+                ⬅️ Previous
+            </Link>
+            <Link
+                v-if="page.props.purchases.next_page_url"
+                :href="page.props.purchases.next_page_url"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
+            >
+                Next ➡️
+            </Link>
         </div>
 
     </div>

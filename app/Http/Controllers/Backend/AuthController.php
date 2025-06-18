@@ -43,7 +43,7 @@ class AuthController extends Controller
           //$request->session()->put('role',$user->role);
           $request->session()->put('user_name',$user->name);
           $token=JWTToken::createToken($user->email);
-          return redirect('/product-stock-list')->cookie('token', $token, 60*60*24);
+          return redirect('/product-stock-list-page')->cookie('token', $token, 60*60*24);
     }
 
     //user logout

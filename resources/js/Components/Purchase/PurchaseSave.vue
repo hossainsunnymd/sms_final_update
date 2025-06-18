@@ -78,10 +78,15 @@ const headers = [
 const items = ref([]);
 
 onMounted(async () => {
+   try{
     isLoading.value = true;
     const response = await axios.get("/product-list");
     items.value = response.data.products;
-    isLoading.value = false;
+   }catch (error) {
+      console.error("Failed to load product list", error);
+   }finally{
+      isLoading.value = false;
+   }
 });
 
 const searchField = ref([

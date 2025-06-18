@@ -3,21 +3,16 @@
 namespace App\Http\Controllers\Backend;
 
 use Exception;
-use Inertia\Inertia;
 use League\Csv\Reader;
 use App\Models\Product;
-use App\Models\Category;
-use App\Models\FloorRecieve;
-use App\Models\IssueProduct;
 use Illuminate\Http\Request;
-use App\Models\DamageProduct;
-use App\Models\PurchaseProduct;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 use App\Services\ProductStockListService;
 use Illuminate\Support\Facades\Validator;
-use App\Models\RequisitionReceivedRequest;
+
 
 class ProductController extends Controller
 {
@@ -31,8 +26,12 @@ class ProductController extends Controller
     //all products
     public function productList()
     {
-        $products = Product::with('category')->select('image', 'id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name', 'description')
+        $products =Cache::remember('productsList', 3600, function () {
+           return  Product::with('category')
+        ->select('image', 'id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name', 'description')
             ->orderBy('id', 'desc')->get();
+
+        });
 
         return response()->json([
             'products' => $products,
@@ -43,8 +42,11 @@ class ProductController extends Controller
     // low stock
     public function lowStock(Request $request)
     {
-        $minimumSotck = Product::whereColumn('unit', '<=', 'minimum_stock')->with('category')->select('id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name')
+        $minimumSotck =Cache::remember('lowStock', 3600, function () {
+           return Product::whereColumn('unit', '<=', 'minimum_stock')->with('category')
+        ->select('id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name')
             ->orderBy('id', 'desc')->get();
+        });
 
         return response()->json([
             'minimumSotck' => $minimumSotck,
@@ -120,6 +122,7 @@ class ProductController extends Controller
             }
 
             Product::create($data);
+            Artisan::call('cache:clear');
             return redirect()->back()->with(['status' => true, 'message' => 'Product created successfully']);
         } catch (Exception $e) {
             return redirect()->back()->with(['status' => false, 'message' => 'Something went wrong']);

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\FloorRecieve;
 use App\Models\IssueProduct;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use App\Models\RequisitionReceivedRequest;
 
 
@@ -28,11 +29,12 @@ class ProductStockListService
             $categoryName = Category::where('id', $categoryId)->first()->name;
         }
 
-        $products = Product::with('category')
-            ->when($categoryId, function ($query) use ($categoryId) {
-                $query->where('category_id', $categoryId);
-            })->get();
-
+        $products = Cache::remember('products', 3600, function () use ($categoryId) {
+            return Product::with('category')
+                ->when($categoryId, function ($query) use ($categoryId) {
+                    $query->where('category_id', $categoryId);
+                })->get();
+        });
 
         // Calculate total received, issue
         $receivedSums = RequisitionReceivedRequest::when($fd && $td, function ($query) use ($fd, $td) {

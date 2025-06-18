@@ -24,10 +24,15 @@ const headers = [
 ];
 const items = ref(page.props.products.data);
 const getAllProducts = async () => {
-    isLoading.value = true;
-    const res = await axios.get("/product-list");
-    items.value = res.data.products;
-    isLoading.value = false;
+    try {
+        isLoading.value = true;
+        const res = await axios.get("/product-list");
+        items.value = res.data.products;
+    } catch (error) {
+        console.error("Failed to load product list", error);
+    } finally {
+        isLoading.value = false;
+    }
 };
 
 const searchField = ref(["id", "name", "category.name", "parts_no"]);

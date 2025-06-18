@@ -32,7 +32,7 @@ Route::middleware([TokenVerificationMiddleware::class])->group(function () {
     Route::get('/product-stock-list', [ProductController::class, 'productStockList'])->name('product.stock.list');
 
     //low stock
-    Route::get('//low-stock', [ProductController::class, 'lowStock'])->middleware('permission:list-minimum-product')->name('low.stock');
+    Route::get('/low-stock', [ProductController::class, 'lowStock'])->middleware('permission:list-minimum-product')->name('low.stock');
 
     /**
      * =====================

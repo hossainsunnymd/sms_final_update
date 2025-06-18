@@ -276,18 +276,29 @@ onMounted(() => {
 
 const status = ref("All Products");
 async function allProduct() {
-    isLoading.value = true;
-    const res = await axios.get("/product-list");
-    items.value = res.data.products;
-    status.value = "All Products";
-    isLoading.value = false;
+    try {
+        isLoading.value = true;
+        const res = await axios.get("/product-list");
+        items.value = res.data.products;
+        status.value = "All Products";
+    } catch (error) {
+        console.error("Failed to load product list", error);
+    } finally {
+        isLoading.value = false;
+    }
 }
+
 async function lowStock() {
-    isLoading.value = true;
-    const res = await axios.get("/low-stock");
-    items.value = res.data.minimumSotck;
-    status.value = "Low Stock";
-    isLoading.value = false;
+    try {
+        isLoading.value = true;
+        const res = await axios.get("/low-stock");
+        items.value = res.data.products;
+        status.value = "Low Stock";
+    } catch (error) {
+        console.error("Failed to load product list", error);
+    } finally {
+        isLoading.value = false;
+    }
 }
 const searchField = ref(["id", "name", "category.name"]);
 const searchItem = ref();
