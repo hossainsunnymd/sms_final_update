@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\FloorRecieve;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
 
 class FloorReceiveController extends Controller
@@ -42,6 +43,7 @@ class FloorReceiveController extends Controller
             ]);
             if ($request->status == 'approved') {
                 $product->increment('unit', $floorRecieve->unit);
+                Artisan::call('cache:clear');
                 return redirect()->back()->with(['status' => true, 'message' => 'Floor recieve approved successfully']);
             } else {
                 return redirect()->back()->with(['status' => true, 'message' => 'Floor recieve rejected successfully']);

@@ -21,7 +21,7 @@ const submitForm = () => {
                    toaster.error(page.props.flash.message);
                }else if(page.props.flash.status==true){
                    toaster.success(page.props.flash.message);
-                   router.visit('/list-product');
+                   router.visit('/list-product-page');
                }
            }
        });

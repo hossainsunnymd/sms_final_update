@@ -114,14 +114,14 @@ function showModal() {
         </EasyDataTable>
         <!-- Pagination Buttons -->
         <div class="flex justify-center gap-4 mt-6">
-            <Link
+            <Link preserve-scroll
                 v-if="page.props.issueProducts.prev_page_url"
                 :href="page.props.issueProducts.prev_page_url"
                 class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition duration-300"
             >
                 ⬅️ Previous
             </Link>
-            <Link
+            <Link preserve-scroll
                 v-if="page.props.issueProducts.next_page_url"
                 :href="page.props.issueProducts.next_page_url"
                 class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"

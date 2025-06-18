@@ -1,7 +1,7 @@
 <script setup>
 import { usePage, Link, router } from "@inertiajs/vue3";
 import { createToaster } from "@meforma/vue-toaster";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 const toaster = createToaster({});
 const page = usePage();
@@ -22,7 +22,7 @@ const headers = [
     { text: "Row", value: "row_no" },
     { text: "Action", value: "action" },
 ];
-const items = ref(page.props.products.data);
+const items = ref([]);
 const getAllProducts = async () => {
     try {
         isLoading.value = true;
@@ -34,6 +34,10 @@ const getAllProducts = async () => {
         isLoading.value = false;
     }
 };
+
+onMounted(() => {
+    getAllProducts();
+});
 
 const searchField = ref(["id", "name", "category.name", "parts_no"]);
 const searchItem = ref();
@@ -102,9 +106,6 @@ if (page.props.flash.status == true) {
             href="/product-list-report"
             >Download Report</a
         >
-        <button @click="getAllProducts()" class="btn btn-info btn-sm ml-1">
-            Show all
-        </button>
 
         <div v-if="page.props.user.can['create-product']" class="mt-4 mb-4">
             <Link

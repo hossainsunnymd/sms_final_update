@@ -117,7 +117,7 @@ onUnmounted(() => {
 
           <li v-if="page.props.user.can['list-product']">
             <Link
-              href="/list-product"
+              href="/list-product-page"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-product') ? 'bg-light fw-bold' : 'text-dark']"
               @click="closeMobileSidebar"
             >
