@@ -22,7 +22,7 @@ class PurchasePageController extends Controller
             $query->whereDate('created_at', '>=', $fd)
                 ->whereDate('created_at', '<=', $td);
         })->with('product.category', 'vendor')
-            ->latest()->paginate(50)->withQueryString();
+            ->latest()->paginate(500)->withQueryString();
         return Inertia::render('Purchase/PurchaseListPage', ['purchases' => $purchases]);
     }
 

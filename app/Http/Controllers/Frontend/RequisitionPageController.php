@@ -24,7 +24,7 @@ class RequisitionPageController extends Controller
             $query->whereDate('created_at', '>=', $fd)
                 ->whereDate('created_at', '<=', $td);
         })->with('requisitionProducts.product')->select('id', 'created_by', 'created_at')
-        ->latest()->paginate(50)->withQueryString();
+        ->latest()->paginate(500)->withQueryString();
 
         return Inertia::render('Requisition/RequisitionListPage', ['requisitions' => $requisitions]);
     }

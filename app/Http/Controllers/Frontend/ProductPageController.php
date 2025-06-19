@@ -91,7 +91,7 @@ class ProductPageController extends Controller
 
         $products = Product::whereColumn('unit', '<=', 'minimum_stock')->with('category')
         ->select('id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name')
-        ->orderBy('id', 'desc')->paginate(50)->withQueryString();
+        ->orderBy('id', 'desc')->paginate(500)->withQueryString();
         return Inertia::render('Products/MinimumStockListPage', ['products' => $products]);
     }
 
@@ -108,7 +108,7 @@ class ProductPageController extends Controller
             $query->whereDate('created_at', '>=', $fd)
                 ->whereDate('created_at', '<=', $td);
         })->with('product')->select('id', 'product_id', 'unit', 'created_at')
-        ->latest()->paginate(50)->withQueryString();
+        ->latest()->paginate(500)->withQueryString();
         return Inertia::render('Products/DamageProductPage', ['damageProducts' => $damageProducts]);
     }
 }
