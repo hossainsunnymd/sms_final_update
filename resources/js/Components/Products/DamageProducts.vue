@@ -12,7 +12,7 @@ const headers = [
     { text: "Receive Date", value: "damage_date" },
 ];
 const formatDate = (date) => {
-    const d = new Date(date).toLocaleString();
+    const d = new Date(date).toLocaleDateString('en-GB');
     return d;
 };
 const items = ref(page.props.damageProducts.data);

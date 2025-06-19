@@ -27,7 +27,7 @@ import PurchaseDetails from './PurchaseDetails.vue';
  const modal = ref(false);
 
  const formatDate = (date) => {
-    const d = new Date(date).toLocaleString();
+    const d = new Date(date).toLocaleDateString('en-GB');
     return d;
 };
 

@@ -8,8 +8,6 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Artisan;
 use App\Services\ProductStockListService;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,29 +22,24 @@ class ProductController extends Controller
     }
 
     //all products
-    public function productList()
-    {
-        $products =Cache::remember('productsList', 3600, function () {
-           return  Product::with('category')
-        ->select('image', 'id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name', 'description')
-            ->orderBy('id', 'desc')->get();
+   public function productList()
+{
+    $products = Product::with('category')
+        ->select('id', 'image', 'name', 'description', 'category_id', 'brand_name', 'unit', 'unit_type', 'rack_no', 'column_no', 'row_no')
+        ->orderBy('id', 'desc')
+        ->get();
 
-        });
+    return response()->json(['products' => $products]);
+}
 
-        return response()->json([
-            'products' => $products,
-            'message' => 'success'
-        ], 200);
-    }
 
     // low stock
     public function lowStock(Request $request)
     {
-        $minimumSotck =Cache::remember('lowStock', 3600, function () {
-           return Product::whereColumn('unit', '<=', 'minimum_stock')->with('category')
-        ->select('id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name')
+        $minimumSotck = Product::whereColumn('unit', '<=', 'minimum_stock')->with('category')
+            ->select('id', 'category_id', 'name', 'parts_no', 'rack_no', 'column_no', 'row_no', 'unit', 'unit_type', 'brand_name')
             ->orderBy('id', 'desc')->get();
-        });
+
 
         return response()->json([
             'minimumSotck' => $minimumSotck,
@@ -122,7 +115,6 @@ class ProductController extends Controller
             }
 
             Product::create($data);
-            Artisan::call('cache:clear');
             return redirect()->back()->with(['status' => true, 'message' => 'Product created successfully']);
         } catch (Exception $e) {
             return redirect()->back()->with(['status' => false, 'message' => 'Something went wrong']);

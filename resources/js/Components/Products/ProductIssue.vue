@@ -17,7 +17,7 @@ const items = ref(page.props.issueProducts.data);
 const searchField = ref(["id", "product.name"]);
 const searchItem = ref();
 const formatDate = (date) => {
-    const d = new Date(date).toLocaleString();
+    const d = new Date(date).toLocaleDateString('en-GB');
     return d;
 };
 

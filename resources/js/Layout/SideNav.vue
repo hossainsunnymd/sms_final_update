@@ -1,35 +1,30 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 
 const page = usePage()
 
-// Controls the visibility of the sidebar on mobile.
-// On desktop, the sidebar is always visible via CSS.
 const isMobileSidebarOpen = ref(false)
+const sidebarNavRef = ref(null)
 
-// Function to open/close the mobile sidebar
+let savedScrollTop = 0
+
 const toggleMobileSidebar = () => {
   isMobileSidebarOpen.value = !isMobileSidebarOpen.value
 }
 
-// Close the mobile sidebar when a link is clicked
 const closeMobileSidebar = () => {
-  if (window.innerWidth < 768) { // Only close if on a small screen
+  if (window.innerWidth < 768) {
     isMobileSidebarOpen.value = false
   }
 }
 
-// Get current path for active link highlighting
 const currentUrl = computed(() => page.url)
 
-// Helper to determine if route is active
 const isActiveRoute = (route) => {
   return currentUrl.value.startsWith(route)
 }
 
-// Ensure isMobileSidebarOpen is false if resizing from mobile to desktop
-// This prevents the mobile overlay from staying open on desktop
 const handleResize = () => {
   if (window.innerWidth >= 768 && isMobileSidebarOpen.value) {
     isMobileSidebarOpen.value = false;
@@ -43,6 +38,25 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
 });
+
+const saveScrollPosition = () => {
+  if (sidebarNavRef.value) {
+    savedScrollTop = sidebarNavRef.value.scrollTop
+  }
+}
+
+const restoreScrollPosition = () => {
+  nextTick(() => {
+    if (sidebarNavRef.value) {
+      sidebarNavRef.value.scrollTop = savedScrollTop
+    }
+  })
+}
+
+// Watch for URL changes to restore scroll position
+watch(() => page.url, (newUrl, oldUrl) => {
+  restoreScrollPosition()
+})
 
 </script>
 
@@ -69,24 +83,30 @@ onUnmounted(() => {
         <h4 class="text-dark">Hello, {{ page.props.user.user_name }}</h4>
       </div>
 
-      <nav class="flex-grow-1 overflow-auto">
+      <nav
+        ref="sidebarNavRef"
+        class="flex-grow-1 overflow-auto"
+      >
         <ul class="list-unstyled px-2 mt-3">
+
           <li v-if="page.props.user.can['list-user']" >
             <Link
               href="/list-user"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-user') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">groups</span>
               <span>Users</span>
             </Link>
           </li>
 
-            <li v-if="page.props.user.can['list-role']">
+          <li v-if="page.props.user.can['list-role']">
             <Link
               href="/list-role"
-              :class="['d-flex align-items-center gap-2 px-3 py-2 rounded',isActiveRoute('/list-role') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-role') ? 'bg-light fw-bold' : 'text-dark']"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">admin_panel_settings</span>
               <span>Roles</span>
@@ -97,7 +117,8 @@ onUnmounted(() => {
             <Link
               href="/product-stock-list-page"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/product-stock-list') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">inventory</span>
               <span>Product Stock List</span>
@@ -108,7 +129,8 @@ onUnmounted(() => {
             <Link
               href="/list-category"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-category') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">category</span>
               <span>Category</span>
@@ -119,7 +141,8 @@ onUnmounted(() => {
             <Link
               href="/list-product-page"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-product') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">inventory</span>
               <span>Products</span>
@@ -130,7 +153,8 @@ onUnmounted(() => {
             <Link
               href="/list-requisition"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-requisition') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">shopping_cart</span>
               <span>Requisitions</span>
@@ -141,7 +165,8 @@ onUnmounted(() => {
             <Link
               href="/requisition-product-list"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/requisition-product-list') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">receipt</span>
               <span>Receive Requisition Products</span>
@@ -152,7 +177,8 @@ onUnmounted(() => {
             <Link
               href="/requisition-received-request-list"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/requisition-received-request-list') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons text-green text-success">check_circle</span>
               <span>Approve Requisition</span>
@@ -163,7 +189,8 @@ onUnmounted(() => {
             <Link
               href="/floor-receive-list"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/floor-receive-list') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons text-green text-success">check_circle</span>
               <span>Approve Floor Recieve</span>
@@ -174,30 +201,32 @@ onUnmounted(() => {
             <Link
               href="/issue-product-list"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/issue-product-list') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">remove_shopping_cart</span>
               <span>Product Issue List</span>
             </Link>
           </li>
 
-           <li v-if="page.props.user.can['list-vendor']">
+          <li v-if="page.props.user.can['list-vendor']">
             <Link
               href="/list-vendor"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-vendor') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">store</span>
               <span>Vendors</span>
             </Link>
-
           </li>
 
           <li v-if="page.props.user.can['list-purchase']">
             <Link
               href="/list-purchase"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/list-purchase') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">shopping_bag</span>
               <span>Purchases</span>
@@ -208,7 +237,8 @@ onUnmounted(() => {
             <Link
               href="/minimum-product-list"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/minimum-product-list') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">warning</span>
               <span>Minimum Stock</span>
@@ -219,13 +249,13 @@ onUnmounted(() => {
             <Link
               href="/damage-product-list"
               :class="['d-flex align-items-center gap-2 px-3 py-2 rounded', isActiveRoute('/damage-product-list') ? 'bg-light fw-bold' : 'text-dark']"
-              @click="closeMobileSidebar"
+              @click="() => { saveScrollPosition(); closeMobileSidebar() }"
+              preserve-scroll
             >
               <span class="material-icons">dangerous</span>
               <span>Damaged Stock List</span>
             </Link>
           </li>
-
 
         </ul>
       </nav>

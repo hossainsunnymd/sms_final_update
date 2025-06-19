@@ -29,12 +29,11 @@ class ProductStockListService
             $categoryName = Category::where('id', $categoryId)->first()->name;
         }
 
-        $products = Cache::remember('products', 3600, function () use ($categoryId) {
-            return Product::with('category')
-                ->when($categoryId, function ($query) use ($categoryId) {
-                    $query->where('category_id', $categoryId);
-                })->get();
-        });
+        $products = Product::with('category')
+            ->when($categoryId, function ($query) use ($categoryId) {
+                $query->where('category_id', $categoryId);
+            })->get();
+
 
         // Calculate total received, issue
         $receivedSums = RequisitionReceivedRequest::when($fd && $td, function ($query) use ($fd, $td) {

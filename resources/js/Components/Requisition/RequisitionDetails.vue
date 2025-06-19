@@ -5,7 +5,6 @@ const props = defineProps({
     modal: Boolean,
 });
 
-
 const emit = defineEmits(["update:modal"]);
 const printModal = () => {
     const printContents = document.getElementById("modal-content").innerHTML;
@@ -23,7 +22,8 @@ const printModal = () => {
         v-if="modal"
         class="fixed inset-0 z-50 flex items-center justify-center"
     >
-        <div id="modal-content"
+        <div
+            id="modal-content"
             class="bg-white w-[1000px] max-w-full rounded-xl shadow-2xl p-6 relative print:w-full print:shadow-none print:p-0 h-[500px] overflow-auto"
         >
             <!-- Close Button -->
@@ -35,7 +35,6 @@ const printModal = () => {
                 ×
             </button> -->
 
-
             <!-- Print Button -->
             <!-- <button
                 @click="printModal"
@@ -46,17 +45,29 @@ const printModal = () => {
 
             <div class="flex justify-between mb-4">
                 <div class="mt-4">
-                    <h1 class="text-xl font-bold">Store Purchase Requisition</h1>
-                    <p>Date: {{ new Date(props.products.created_at).toLocaleString().split(",")[0] }}</p>
+                    <h1 class="text-xl font-bold">
+                        Store Purchase Requisition
+                    </h1>
+                    <p>
+                        Date:
+                        {{
+                            new Date(
+                                props.products.created_at
+                            ).toLocaleDateString("en-GB")
+                        }}
+                    </p>
                 </div>
                 <div class="font-bold">
-                    <img class="h-[90px]" src="../../Assets/img/logo.jpg" alt="Logo" />
+                    <img
+                        class="h-[90px]"
+                        src="../../Assets/img/logo.jpg"
+                        alt="Logo"
+                    />
                 </div>
             </div>
 
-
             <div class="mb-4 text-xl">
-              <p><strong>Requisition No:</strong> {{ props.products.id }}</p>
+                <p><strong>Requisition No:</strong> {{ props.products.id }}</p>
             </div>
 
             <!-- Title -->
@@ -80,29 +91,15 @@ const printModal = () => {
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">
-                                Name of Item
-                            </th>
-                             <th class="text-center">
-                               Product Description
-                            </th>
+                            <th class="text-center">Name of Item</th>
+                            <th class="text-center">Product Description</th>
                             <th class="text-center">Size</th>
                             <th class="text-center">Unit</th>
-                            <th class="text-center">
-                                Required Quantity
-                            </th>
-                            <th class="text-center">
-                                Present Stock
-                            </th>
-                            <th class="text-center">
-                                Store Code
-                            </th>
-                            <th class="text-center">
-                                Where to be use
-                            </th>
-                            <th class="text-center">
-                                Remarks
-                            </th>
+                            <th class="text-center">Required Quantity</th>
+                            <th class="text-center">Present Stock</th>
+                            <th class="text-center">Store Code</th>
+                            <th class="text-center">Where to be use</th>
+                            <th class="text-center">Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,10 +113,10 @@ const printModal = () => {
                             <td class="text-center">
                                 {{ product.product.name }}
                             </td>
-                               <td class="text-center">
+                            <td class="text-center">
                                 {{ product.product.description }}
                             </td>
-                            <td class="text-center">{{product.size}}</td>
+                            <td class="text-center">{{ product.size }}</td>
                             <td class="text-center">
                                 {{ product.product.unit_type }}
                             </td>
@@ -142,7 +139,6 @@ const printModal = () => {
                     </tbody>
                 </table>
 
-
                 <!-- Action Buttons -->
                 <div class="flex justify-between mt-6">
                     <button
@@ -152,21 +148,21 @@ const printModal = () => {
                         Close
                     </button>
                     <button
-                       @click="printModal"
+                        @click="printModal"
                         class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 print:hidden"
                     >
                         Print
                     </button>
                 </div>
-
-
             </div>
 
             <!-- Footer -->
             <div class="mt-6 text-center text-xs text-gray-500 print:hidden">
                 Press the Print button or Ctrl+P to print this summary.
             </div>
-            <div class="absolute bottom-2 text-sm font-bold w-full hidden print:block">
+            <div
+                class="absolute bottom-2 text-sm font-bold w-full hidden print:block"
+            >
                 <div class="flex justify-between">
                     <p class="border-t-1">Prepared by</p>
                     <p class="border-t-1">Manager(store)</p>
@@ -242,7 +238,9 @@ table {
     width: 100%;
     border-collapse: collapse;
 }
-th,td,tr {
+th,
+td,
+tr {
     padding: 8px;
     border: 1px solid black;
     text-align: left;
