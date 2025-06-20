@@ -11,7 +11,7 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        for ($i = 1; $i <= 30000; $i++) {
+        for ($i = 1; $i <= 2000; $i++) {
             DB::table('products')->insert([
             'name' => 'Product ' . $i,
             'category_id' => rand(1, 5), // Make sure categories with these IDs exist

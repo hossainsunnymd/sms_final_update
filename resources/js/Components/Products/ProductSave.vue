@@ -63,7 +63,7 @@ function submitForm() {
         toaster.error(page.props.flash.message);
       } else if (page.props.flash.status == true) {
         toaster.success(page.props.flash.message);
-        router.get("/list-product");
+        router.get("/list-product-page");
       }
     },
   });
@@ -78,7 +78,7 @@ function submitForm() {
 
 
       <div class="float-end">
-          <Link href="/list-product" class="btn btn-success mx-3 btn-sm">
+          <Link href="/list-product-page" class="btn btn-success mx-3 btn-sm">
           Back
           </Link>
       </div>

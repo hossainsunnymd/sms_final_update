@@ -232,7 +232,6 @@
     </div>
 </template>
 
-<style scoped></style>
 
 <script setup>
 import { usePage, useForm, router } from "@inertiajs/vue3";
@@ -292,7 +291,7 @@ async function lowStock() {
     try {
         isLoading.value = true;
         const res = await axios.get("/low-stock");
-        items.value = res.data.products;
+        items.value = res.data.minimumSotck;
         status.value = "Low Stock";
     } catch (error) {
         console.error("Failed to load product list", error);
