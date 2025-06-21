@@ -46,8 +46,8 @@ class ProductPageController extends Controller
     //list product page
     public function listProductPage()
     {
-
-        return Inertia::render('Products/ProductListPage');
+        $products=Product::with('category')->orderBy('id', 'desc')->paginate(500);
+        return Inertia::render('Products/ProductListPage', ['products' => $products]);
     }
 
     // product list report

@@ -77,6 +77,7 @@ const submitForm = async () => {
         items.value = res.data.allProducts.productList;
         category_name.value = res.data.allProducts.category_name;
         categories.value = res.data.allProducts.categories;
+        console.log(items.value);
     } catch (error) {
         console.error("Failed to load product stock list", error);
     } finally {
